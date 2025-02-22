@@ -3,15 +3,23 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./utils/db.js";
+dotenv.config({});
+
 
 const app = express();
 
-// app.get("/home",(req,res)=>{
-//     return res.status(200).json({
-//         message:"I am coming from backend",
-//         success:true
-//     })
-// })
+const server = app.listen(3000);
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error('Port 3000 is already in use');
+    process.exit(1);
+  }
+});
+
+
 
 // middleware
 app.use(express.json());
@@ -22,8 +30,9 @@ const corOptions = {
     credentials:true
 }
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT,()=>{
-    console.log(`server running at port ${PORT}`);
+  connectDB();  
+ console.log(`server running at port ${PORT}`);
 })
